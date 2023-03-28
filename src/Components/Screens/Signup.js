@@ -1,23 +1,25 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-
-const Login = () => {
+export default function Signup() {
   const [credentials, setCredentials] = useState({
+    name: "",
     email: "",
     password: "",
+    geolocation: "",
   });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch("http://localhost:5000/api/loginuser", {
+    const response = await fetch("http://localhost:5000/api/createUser", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        name: credentials.name,
         email: credentials.email,
         password: credentials.password,
+        location: credentials.geolocation,
       }),
     });
     const json = await response.json();
@@ -35,9 +37,21 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <>
       <div className="container">
         <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <label htmlFor="name" className="form-label">
+              Name
+            </label>
+            <input
+              type="text"
+              name="name"
+              value={credentials.name}
+              onChange={onChange}
+              className="form-control"
+            />
+          </div>
           <div className="mb-3">
             <label htmlFor="email" className="form-label">
               Email address
@@ -62,16 +76,26 @@ const Login = () => {
               onChange={onChange}
             />
           </div>
+          <div className="mb-3">
+            <label htmlFor="geolocation" className="form-label">
+              Address
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              name="geolocation"
+              value={credentials.geolocation}
+              onChange={onChange}
+            />
+          </div>
           <button type="submit" className="btn btn-primary">
             Submit
           </button>
-          <Link to="/signup" className="m-3 btn btn">
-            New User
+          <Link to="/login" className="m-3 btn btn">
+            Already have an account
           </Link>
         </form>
       </div>
-    </div>
+    </>
   );
-};
-
-export default Login;
+}
